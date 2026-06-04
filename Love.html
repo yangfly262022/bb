@@ -134,16 +134,19 @@
     </div>
 
     <script>
-        function playMusic() {
+        var isInitialized = false;
+        
+        function initPage() {
+            if (isInitialized) return;
+            isInitialized = true;
+            
             var audio = document.getElementById('bgMusic');
             if (audio) {
                 audio.play().catch(function (err) {
                     console.log('Audio play failed:', err);
                 });
             }
-        }
 
-        function hideHint() {
             var hint = document.getElementById('start-hint');
             if (hint) {
                 hint.style.transition = 'opacity 0.8s ease';
@@ -154,23 +157,13 @@
             }
         }
 
-        document.addEventListener('click', function () {
-            playMusic();
-            hideHint();
-        }, { once: true });
-
-        document.addEventListener('touchstart', function (e) {
-            e.preventDefault();
-            playMusic();
-            hideHint();
-        }, { once: true });
+        document.addEventListener('click', initPage, { once: true });
+        document.addEventListener('touchstart', initPage, { once: true });
     </script>
 
     <script>
-    </script>
-
-    <script>
-        (function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            (function () {
             var canvas = $('#canvas');
 
             if (!canvas[0].getContext) {
@@ -238,10 +231,8 @@
                 y = e.pageY - offset.top;
                 canvas.toggleClass('hand', seed.hover(x, y));
             }).on('touchstart', function (e) {
-                e.preventDefault();
                 handleInteraction(e);
             }).on('touchmove', function (e) {
-                e.preventDefault();
                 var touch = e.touches[0];
                 var offset = canvas.offset(), x, y;
                 x = touch.pageX - offset.left;
@@ -365,9 +356,9 @@
             }));
 
             runAsync().start();
-        })();
+            })();
+        });
     </script>
-
 
 
 </body>
