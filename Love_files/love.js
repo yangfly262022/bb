@@ -353,7 +353,10 @@
                 }
             }
         },
-
+        
+        canFlower: function() {
+            return !!this.blooms.length;
+        }, 
         flower: function(num) {
             var s = this, blooms = s.bloomsCache.splice(0, num);
             for (var i = 0; i < blooms.length; i++) {
@@ -416,13 +419,13 @@
                     width = bloom.width || this.width,
                     height = bloom.height || this.height,
                     figure = this.seed.heart.figure;
-                var r = 240 * (width / 1100), x, y;
+                var r = 240, x, y;
                 for (var i = 0; i < random(1,2); i++) {
-                    blooms.push(this.createBloom(width / 2 + width, height, r, figure, null, 1, null, 1, new Point(random(-100 * (width / 1100), 600 * (width / 1100)), 720 * (width / 1100)), random(200,300)));
+                    blooms.push(this.createBloom(width / 2 + width, height, r, figure, null, 1, null, 1, new Point(random(-100,600), 720), random(200,300)));
                 }
             }
         }
-    };
+    }
 
     Branch = function(tree, point1, point2, point3, radius, length, branchs) {
         this.tree = tree;

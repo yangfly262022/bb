@@ -1,8 +1,0 @@
-[build]
-  command = ""
-  publish = "."
-
-[[redirects]]
-  from = "/"
-  to = "/Love.html"
-  status = 200
