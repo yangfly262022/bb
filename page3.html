@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <!--新增移动端适配标签，直接复制粘贴-->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>做我女朋友好吗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a0a2e 0%, #4a1a6b 25%, #8b2f5c 50%, #d44d7a 75%, #ff8fa3 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 浮动粒子背景 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 心形粒子 */
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.8);
+            font-size: 20px;
+            animation: heartFloat linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(-20deg);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateY(80vh) scale(1) rotate(0deg);
+            }
+
+            85% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(0.5) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        /* 光晕效果 */
+        .glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            animation: glowMove 20s ease-in-out infinite;
+        }
+
+        .glow:nth-child(1) {
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .glow:nth-child(2) {
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(147, 112, 219, 0.3) 0%, transparent 70%);
+            animation-delay: -10s;
+        }
+
+        @keyframes glowMove {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(100px, 50px) scale(1.2);
+            }
+
+            66% {
+                transform: translate(-50px, 100px) scale(0.9);
+            }
+        }
+
+        /* 主卡片 */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: cardAppear 1s ease-out;
+        }
+
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 标题装饰 */
+        .title-deco {
+            font-size: 40px;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            14% {
+                transform: scale(1.1);
+            }
+
+            28% {
+                transform: scale(1);
+            }
+
+            42% {
+                transform: scale(1.1);
+            }
+
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        /* 表白文字 */
+        .love-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 18px;
+            line-height: 2;
+            margin-bottom: 30px;
+            min-height: 120px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .love-text .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: #ffb6c1;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* 问题 */
+        .question {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 1s ease 3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 按钮容器 */
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            min-height: 60px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease 3.5s forwards;
+        }
+
+        /* 同意按钮 */
+        .btn-agree {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(196, 69, 105, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-agree:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(196, 69, 105, 0.6);
+        }
+
+        .btn-agree:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-agree::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent,
+                    rgba(255, 255, 255, 0.3),
+                    transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .btn-agree:hover::after {
+            animation: shine 0.5s ease-out;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* 不同意按钮 */
+        .btn-disagree {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 35px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-disagree:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* 结果展示 */
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            animation: resultAppear 1s ease;
+        }
+
+        @keyframes resultAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .result-text {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.8;
+        }
+
+        .result-date {
+            color: #ffb6c1;
+            font-size: 28px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 182, 193, 0.5);
+        }
+
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .fw-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 提示文字 */
+        .hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        /* 星星装饰 */
+        .star {
+            position: fixed;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            animation: twinkle 2s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<script>
+    window.addEventListener('load', function () {
+        var audio = document.getElementById('bgMusic');
+        audio.volume = 0.5;
+        var playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(function () {
+                document.addEventListener('click', function () {
+                    audio.play();
+                }, { once: true });
+            });
+        }
+    });
+</script>
+
+<body>
+    <audio id="bgMusic" src="love3.mp3" loop="loop"></audio>
+    <!-- 背景光晕 -->
+    <div class="glow"></div>
+    <div class="glow"></div>
+
+    <!-- 粒子容器 -->
+    <div class="particles" id="particles"></div>
+    <div class="fireworks" id="fireworks"></div>
+
+    <!-- 主卡片 -->
+    <div class="card">
+        <div class="title-deco">💕</div>
+
+        <div class="love-text" id="loveText">
+            <span id="typedText"></span><span class="cursor"></span>
+        </div>
+
+        <div class="question" id="question" style="display:none;">
+            你愿意做我女朋友吗？
+        </div>
+
+        <div class="buttons" id="buttons" style="display:none;">
+            <button class="btn-agree" id="btnAgree" onclick="handleAgree()">同意 💖</button>
+            <button class="btn-disagree" id="btnDisagree" onclick="handleDisagree()">不同意</button>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-text">
+                恭喜你！成功捕获一只男朋友 🎉<br>
+                一经签收，概不退货哦～<br>
+                我们的故事，从今天开始！
+            </div>
+            <div class="result-date" id="resultDate"></div>
+        </div>
+    </div>
+
+    <div class="hint">把这份浪漫送给最特别的TA</div>
+
+    <script>
+        // ========== 配置 ==========
+        const loveWords = "异地不是遗憾的理由，相爱才是。我做好了所有吃苦、奔波、等待的准备。车票我可以攒，路程我可以跑，思念我可以慢慢兑现，我也愿意为了这段感情付出时间、精力。今天跨出最后一步向你表白，我喜欢你，想要正式以男朋友的身份陪着你，而不是继续隔着屏幕含糊不清的暧昧。如果你也对我存有好感，我们试着开启一段异地恋，慢慢磨合，慢慢奔赴，一点点把异地熬成朝夕相伴。不管最后结果如何，能遇见并陪伴你这么久，我已经满心庆幸。";
+
+        let disagreeCount = 0;
+        let isTyping = true;
+
+        // ========== 打字机效果 ==========
+        function typeWriter(text, element, speed = 80) {
+            let i = 0;
+            element.innerHTML = '';
+
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed + Math.random() * 40);
+                } else {
+                    isTyping = false;
+                    // 文字打印完后显示问题和按钮
+                    setTimeout(() => {
+                        document.getElementById('question').style.display = 'block';
+                        document.getElementById('buttons').style.display = 'flex';
+                    }, 500);
+                }
+            }
+            type();
+        }
+
+        // ========== 初始化打字 ==========
+        const typedText = document.getElementById('typedText');
+        setTimeout(() => {
+            typeWriter(loveWords, typedText, 70);
+        }, 500);
+
+        // ========== 创建背景粒子 ==========
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#ffecd2', '#fcb045', '#ff9a9e'];
+
+            // 圆形粒子
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 8 + 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
+            }
+
+            // 心形粒子
+            for (let i = 0; i < 15; i++) {
+                const h = document.createElement('div');
+                h.className = 'heart-particle';
+                h.innerHTML = '❤';
+                h.style.left = Math.random() * 100 + '%';
+                h.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                h.style.animationDuration = (Math.random() * 12 + 10) + 's';
+                h.style.animationDelay = Math.random() * 8 + 's';
+                container.appendChild(h);
+            }
+
+            // 星星装饰
+            for (let i = 0; i < 20; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.innerHTML = '✨';
+                s.style.left = Math.random() * 100 + '%';
+                s.style.top = Math.random() * 100 + '%';
+                s.style.animationDelay = Math.random() * 2 + 's';
+                s.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(s);
+            }
+        }
+
+        createParticles();
+
+        // ========== 不同意按钮逻辑 ==========
+        function handleDisagree() {
+            if (isTyping) return;
+
+            disagreeCount++;
+            const btn = document.getElementById('btnDisagree');
+
+            if (disagreeCount === 1) {
+                // 第一次：随机缩小
+                const scale = 0.3 + Math.random() * 0.3; // 0.3 ~ 0.6
+                btn.style.transform = `scale(${scale})`;
+                btn.innerHTML = '再想想？';
+
+            } else if (disagreeCount === 2) {
+                // 第二次：随机位置
+                btn.style.position = 'absolute';
+                btn.style.transform = 'scale(0.7)';
+                moveButtonRandom(btn);
+                btn.innerHTML = '真的不要吗 😢';
+
+            } else if (disagreeCount >= 3) {
+                // 第三次：隐藏
+                btn.style.display = 'none';
+                // 让同意按钮变大一点
+                const agreeBtn = document.getElementById('btnAgree');
+                agreeBtn.style.transform = 'scale(1.2)';
+                agreeBtn.innerHTML = '只能同意啦 💘';
+            }
+        }
+
+        function moveButtonRandom(btn) {
+            const card = document.querySelector('.card');
+            const cardRect = card.getBoundingClientRect();
+            const maxX = cardRect.width - 100;
+            const maxY = cardRect.height - 50;
+
+            const randomX = Math.random() * maxX - maxX / 2;
+            const randomY = Math.random() * maxY - maxY / 2;
+
+            btn.style.left = `calc(50% + ${randomX}px)`;
+            btn.style.top = `calc(50% + ${randomY}px)`;
+        }
+
+        // ========== 同意按钮逻辑 ==========
+        function handleAgree() {
+            if (isTyping) return;
+
+            const result = document.getElementById('result');
+            const resultDate = document.getElementById('resultDate');
+            const buttons = document.getElementById('buttons');
+            const question = document.getElementById('question');
+
+            // 隐藏按钮和问题
+            buttons.style.display = 'none';
+            question.style.display = 'none';
+
+            // 显示结果
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            const weekDay = weekDays[now.getDay()];
+
+            resultDate.innerHTML = `${year}年${month}月${day}日<br><span style="font-size:16px;opacity:0.8;">星期${weekDay}</span>`;
+            result.style.display = 'block';
+
+            // 放烟花
+            launchFireworks();
+
+            // 满屏爱心
+            createLoveRain();
+        }
+
+        // ========== 烟花效果 ==========
+        function launchFireworks() {
+            const container = document.getElementById('fireworks');
+            const colors = ['#ff6b9d', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3'];
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight * 0.5 + 100;
+                    createFirework(x, y, colors);
+                }, i * 400);
+            }
+        }
+
+        function createFirework(x, y, colors) {
+            const container = document.getElementById('fireworks');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.className = 'fw-particle';
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 80 + Math.random() * 100;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                container.appendChild(p);
+
+                let posX = x;
+                let posY = y;
+                let opacity = 1;
+                let gravity = 0.5;
+                let velY = vy;
+
+                const animate = () => {
+                    posX += vx * 0.02;
+                    posY += velY * 0.02;
+                    velY += gravity;
+                    opacity -= 0.015;
+
+                    p.style.left = posX + 'px';
+                    p.style.top = posY + 'px';
+                    p.style.opacity = opacity;
+                    p.style.transform = `scale(${opacity})`;
+
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        p.remove();
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // ========== 爱心雨 ==========
+        function createLoveRain() {
+            const container = document.getElementById('particles');
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.style.position = 'fixed';
+                    heart.innerHTML = ['❤', '💖', '💕', '💗', '💝'][Math.floor(Math.random() * 5)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.zIndex = '100';
+                    heart.style.animation = `heartFloat ${Math.random() * 3 + 2}s linear forwards`;
+                    container.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 100);
+            }
+        }
+
+        // ========== 鼠标跟随微光 ==========
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.querySelectorAll('.glow');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            glow.forEach((g, index) => {
+                const offset = index === 0 ? 1 : -1;
+                g.style.transform = `translate(${x * 30 * offset}px, ${y * 30 * offset}px) scale(${1 + index * 0.2})`;
+            });
+        });
+    </script>
+</body>
+
+</html>
