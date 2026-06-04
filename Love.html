@@ -1,366 +1,187 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Love</title>
-
-    <link type="text/css" rel="stylesheet" href="./Love_files/default.css">
-    <script type="text/javascript" src="./Love_files/jquery.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-parser.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-jit.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-async.min.js"></script>
-    <script type="text/javascript" src="./Love_files/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="./Love_files/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./Love_files/love.js" charset="utf-8"></script>
-
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #ffe; min-height: 100vh; overflow: hidden; }
+        #wrap { position: relative; width: 100%; height: 100vh; }
+        #canvas { display: block; width: 100%; height: 100%; }
         #start-hint {
-            position: fixed;
-            bottom: 500px;
-            width: 100%;
-            text-align: center;
-            color: rgba(8, 8, 8, 0.85);
-            font-size: 20px;
-            z-index: 9999;
-            pointer-events: none;
-            /* 不阻挡点击 */
-            animation: fadeIn 2s ease-out;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            letter-spacing: 2px;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: rgba(190, 26, 37, 0.9);
+            font-size: 18px; z-index: 9999;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            letter-spacing: 3px;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+        #content { display: none; position: relative; z-index: 10; }
+        #text { padding: 20px; color: #333; font-size: 14px; line-height: 2; }
+        .heart { color: #ff4757; }
+        #clock-box { text-align: center; padding: 10px; color: #666; font-size: 14px; }
+        #clock { font-weight: bold; color: #ff4757; }
+        .heart-btn {
+            display: inline-block; width: 20px; height: 20px;
+            position: relative; margin: 0 5px;
+            animation: heartbeat 1.5s ease-in-out infinite;
         }
+        .heart-btn::before, .heart-btn::after {
+            content: ''; position: absolute; top: 0;
+            width: 12px; height: 20px; background: #ff4757;
+            border-radius: 12px 12px 0 0;
+        }
+        .heart-btn::before { left: 10px; transform: rotate(-45deg); transform-origin: 0 100%; }
+        .heart-btn::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
     </style>
 </head>
-
 <body>
-    <div id="start-hint">点击屏幕，开启我们的故事 🎵</div>
-    <div id="main">
-        <div id="error">亲，您使用的浏览器无法支持即将显示的内容，请换成谷歌(<a
-                href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)或者火狐(<a
-                href="http://firefox.com.cn/download/">Firefox</a>)浏览器哟~</div>
-        <div id="wrap">
+    <div id="wrap">
+        <div id="start-hint">💕 点击屏幕，开启我们的故事 🎵</div>
+        <canvas id="canvas"></canvas>
+        <div id="content">
             <div id="text">
-                <div id="code">
-                    <span class="say">缘起最右，相逢有幸。</span><br>
-                    <span class="say">开始是在最右偶然刷到你，</span><br>
-                    <span class="say">原本只是萍水相逢的陌生人，</span><br>
-                    <span class="say">随口聊了几句之后互加微信，</span><br>
-                    <span class="say">谁都没有料到，这一认识，</span><br>
-                    <span class="say">就慢慢占据了我全部的日常。</span><br>
-                    <span class="say">最起初只是闲来无事的闲聊，</span><br>
-                    <span class="say">分享零散的趣事，</span><br>
-                    <span class="say">慢慢变成晨起第一句早安，</span><br>
-                    <span class="say">睡前不间断的碎碎念。</span><br>
-                    <span class="say">我会随手拍下路边的风景，</span><br>
-                    <span class="say">吃到的美食下意识分享给你，</span><br>
-                    <span class="say">遇到委屈或者开心的小事，</span><br>
-                    <span class="say">第一个想要倾诉的人也是你。</span><br>
-                    <br>
-
-                </div>
+                <p class="heart">缘起最右，相逢有幸。</p>
+                <p>开始是在最右偶然刷到你，</p>
+                <p>原本只是萍水相逢的陌生人，</p>
+                <p>随口聊了几句之后互加微信，</p>
+                <p>谁都没有料到，这一认识，</p>
+                <p>就慢慢占据了我全部的日常。</p>
+                <p>最起初只是闲来无事的闲聊，</p>
+                <p>分享零散的趣事，</p>
+                <p>慢慢变成晨起第一句早安，</p>
+                <p>睡前不间断的碎碎念。</p>
+                <p>我会随手拍下路边的风景，</p>
+                <p>吃到的美食下意识分享给你，</p>
+                <p>遇到委屈或者开心的小事，</p>
+                <p class="heart">第一个想要倾诉的人也是你。</p>
             </div>
             <div id="clock-box">
-                <a target="_blank">小飞</a> 与 <a target="_blank">小婧</a> 认识的
-                <a href="page2.html" id="treeLink" class="heart-btn" title="点击继续"></a>
-                <div id="clock"></div>
+                <span>小飞</span> 与 <span>小婧</span> 认识的
+                <span class="heart-btn"></span>
+                <span id="clock"></span>
             </div>
-            <canvas id="canvas"></canvas>
-            <style>
-                .heart-btn {
-                    display: inline-block;
-                    width: 24px;
-                    height: 24px;
-                    cursor: pointer;
-                    animation: heartbeat 1.5s ease-in-out infinite;
-                    margin-left: 8px;
-                    vertical-align: middle;
-                }
-
-                .heart-btn::before,
-                .heart-btn::after {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    width: 16px;
-                    height: 24px;
-                    background: #ff4757;
-                    border-radius: 16px 16px 0 0;
-                }
-
-                .heart-btn::before {
-                    left: 12px;
-                    transform: rotate(-45deg);
-                    transform-origin: 0 100%;
-                }
-
-                .heart-btn::after {
-                    left: 0;
-                    transform: rotate(45deg);
-                    transform-origin: 100% 100%;
-                }
-
-                @keyframes heartbeat {
-
-                    0%,
-                    100% {
-                        transform: scale(1);
-                    }
-
-                    50% {
-                        transform: scale(1.1);
-                    }
-                }
-            </style>
         </div>
-        <audio id="bgMusic" src="love.mp3" loop="loop" preload="auto">
     </div>
+    <audio id="bgMusic" src="love.mp3" loop preload="auto"></audio>
 
     <script>
-        var isInitialized = false;
-        
-        function initPage() {
-            if (isInitialized) return;
-            isInitialized = true;
-            
-            var audio = document.getElementById('bgMusic');
-            if (audio) {
-                audio.play().catch(function (err) {
-                    console.log('Audio play failed:', err);
-                });
-            }
+        var canvas, ctx, width, height, particles = [];
+        var isStarted = false;
+        var startTime;
 
-            var hint = document.getElementById('start-hint');
-            if (hint) {
-                hint.style.transition = 'opacity 0.8s ease';
-                hint.style.opacity = '0';
-                setTimeout(function () {
-                    hint.style.display = 'none';
-                }, 800);
-            }
+        function init() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            resize();
+            window.addEventListener('resize', resize);
         }
 
-        document.addEventListener('click', initPage, { once: true });
-        document.addEventListener('touchstart', initPage, { once: true });
-    </script>
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            (function () {
-            var canvas = $('#canvas');
+        function createHeart(x, y, scale) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            ctx.fillStyle = '#ff4757';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(20, -20, 40, 0, 0, 30);
+            ctx.bezierCurveTo(-40, 0, -20, -20, 0, 0);
+            ctx.fill();
+            ctx.restore();
+        }
 
-            if (!canvas[0].getContext) {
-                $("#error").show();
-                return false;
-            }
+        function createParticle() {
+            return {
+                x: width / 2 + (Math.random() - 0.5) * 100,
+                y: height / 2 + (Math.random() - 0.5) * 100,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2 - 1,
+                scale: Math.random() * 0.5 + 0.2,
+                alpha: 1,
+                decay: Math.random() * 0.01 + 0.005
+            };
+        }
 
-            var container = $('#wrap');
-            var width = Math.min(container.width(), 1100);
-            var height = Math.round(width * 680 / 1100);
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
             
-            canvas.attr("width", width);
-            canvas.attr("height", height);
-            canvas.css("width", width + "px");
-            canvas.css("height", height + "px");
-
-            var scaleRatio = width / 1100;
+            var time = Date.now() - startTime;
             
-            var opts = {
-                seed: {
-                    x: width / 2 - 20,
-                    color: "rgb(190, 26, 37)",
-                    scale: 2 * scaleRatio
-                },
-                branch: [
-                    [535 * scaleRatio, height, 570 * scaleRatio, 250 * scaleRatio, 500 * scaleRatio, 200 * scaleRatio, 30 * scaleRatio, 100, [
-                        [540 * scaleRatio, 500 * scaleRatio, 455 * scaleRatio, 417 * scaleRatio, 340 * scaleRatio, 400 * scaleRatio, 13 * scaleRatio, 100, [
-                            [450 * scaleRatio, 435 * scaleRatio, 434 * scaleRatio, 430 * scaleRatio, 394 * scaleRatio, 395 * scaleRatio, 2 * scaleRatio, 40]
-                        ]],
-                        [550 * scaleRatio, 445 * scaleRatio, 600 * scaleRatio, 356 * scaleRatio, 680 * scaleRatio, 345 * scaleRatio, 12 * scaleRatio, 100, [
-                            [578 * scaleRatio, 400 * scaleRatio, 648 * scaleRatio, 409 * scaleRatio, 661 * scaleRatio, 426 * scaleRatio, 3 * scaleRatio, 80]
-                        ]],
-                        [539 * scaleRatio, 281 * scaleRatio, 537 * scaleRatio, 248 * scaleRatio, 534 * scaleRatio, 217 * scaleRatio, 3 * scaleRatio, 40],
-                        [546 * scaleRatio, 397 * scaleRatio, 413 * scaleRatio, 247 * scaleRatio, 328 * scaleRatio, 244 * scaleRatio, 9 * scaleRatio, 80, [
-                            [427 * scaleRatio, 286 * scaleRatio, 383 * scaleRatio, 253 * scaleRatio, 371 * scaleRatio, 205 * scaleRatio, 2 * scaleRatio, 40],
-                            [498 * scaleRatio, 345 * scaleRatio, 435 * scaleRatio, 315 * scaleRatio, 395 * scaleRatio, 330 * scaleRatio, 4 * scaleRatio, 60]
-                        ]],
-                        [546 * scaleRatio, 357 * scaleRatio, 608 * scaleRatio, 252 * scaleRatio, 678 * scaleRatio, 221 * scaleRatio, 6 * scaleRatio, 100, [
-                            [590 * scaleRatio, 293 * scaleRatio, 646 * scaleRatio, 277 * scaleRatio, 648 * scaleRatio, 271 * scaleRatio, 2 * scaleRatio, 80]
-                        ]]
-                    ]]
-                ],
-                bloom: {
-                    num: Math.round(700 * scaleRatio),
-                    width: width,
-                    height: height,
-                },
-                footer: {
-                    width: width + 100,
-                    height: 5 * scaleRatio,
-                    speed: 10,
+            if (time < 2000) {
+                var scale = Math.min(time / 500, 2);
+                createHeart(width / 2, height / 2, scale);
+            } else {
+                for (var i = particles.length - 1; i >= 0; i--) {
+                    var p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.02;
+                    p.alpha -= p.decay;
+                    
+                    if (p.alpha > 0) {
+                        ctx.globalAlpha = p.alpha;
+                        createHeart(p.x, p.y, p.scale);
+                    } else {
+                        particles.splice(i, 1);
+                    }
                 }
-            }
-
-            var tree = new Tree(canvas[0], width, height, opts);
-            var seed = tree.seed;
-            var foot = tree.footer;
-            var hold = 1;
-
-            canvas.click(function (e) {
-                handleInteraction(e);
-            }).mousemove(function (e) {
-                var offset = canvas.offset(), x, y;
-                x = e.pageX - offset.left;
-                y = e.pageY - offset.top;
-                canvas.toggleClass('hand', seed.hover(x, y));
-            }).on('touchstart', function (e) {
-                handleInteraction(e);
-            }).on('touchmove', function (e) {
-                var touch = e.touches[0];
-                var offset = canvas.offset(), x, y;
-                x = touch.pageX - offset.left;
-                y = touch.pageY - offset.top;
-                canvas.toggleClass('hand', seed.hover(x, y));
-            });
-
-            function handleInteraction(e) {
-                var offset = canvas.offset(), x, y;
-                if (e.touches && e.touches.length > 0) {
-                    x = e.touches[0].pageX - offset.left;
-                    y = e.touches[0].pageY - offset.top;
-                } else {
-                    x = e.pageX - offset.left;
-                    y = e.pageY - offset.top;
-                }
-                if (seed.hover(x, y)) {
-                    hold = 0;
-                    canvas.unbind("click");
-                    canvas.unbind("mousemove");
-                    canvas.off('touchstart');
-                    canvas.off('touchmove');
-                    canvas.removeClass('hand');
-                }
-            }
-
-            var seedAnimate = eval(Jscex.compile("async", function () {
-                seed.draw();
-                while (hold) {
-                    $await(Jscex.Async.sleep(10));
-                }
-                while (seed.canScale()) {
-                    seed.scale(0.95);
-                    $await(Jscex.Async.sleep(10));
-                }
-                while (seed.canMove()) {
-                    seed.move(0, 2);
-                    foot.draw();
-                    $await(Jscex.Async.sleep(10));
-                }
-            }));
-
-            var growAnimate = eval(Jscex.compile("async", function () {
-                do {
-                    tree.grow();
-                    $await(Jscex.Async.sleep(10));
-                } while (tree.canGrow());
-            }));
-
-            var flowAnimate = eval(Jscex.compile("async", function () {
-                do {
-                    tree.flower(2);
-                    $await(Jscex.Async.sleep(10));
-                } while (tree.canFlower());
-            }));
-
-            var moveAnimate = eval(Jscex.compile("async", function () {
-                var snapX = Math.round(240 * scaleRatio);
-                var snapWidth = Math.round(610 * scaleRatio);
-                var snapHeight = height;
-                var snapTargetX = Math.round(500 * scaleRatio);
                 
-                tree.snapshot("p1", snapX, 0, snapWidth, snapHeight);
-                while (tree.move("p1", snapTargetX, 0)) {
-                    foot.draw();
-                    $await(Jscex.Async.sleep(10));
+                if (Math.random() < 0.3) {
+                    particles.push(createParticle());
                 }
-                foot.draw();
-                tree.snapshot("p2", snapTargetX, 0, snapWidth, snapHeight);
-
-                // 会有闪烁不得意这样做, (＞﹏＜)
-                canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-                canvas.css("background", "#ffe");
-                $await(Jscex.Async.sleep(300));
-                canvas.css("background", "none");
-            }));
-
-            var jumpAnimate = eval(Jscex.compile("async", function () {
-                var ctx = tree.ctx;
-                while (true) {
-                    tree.ctx.clearRect(0, 0, width, height);
-                    tree.jump();
-                    foot.draw();
-                    $await(Jscex.Async.sleep(25));
-                }
-            }));
+            }
             
-            $(window).resize(function() {
-                var newWidth = Math.min(container.width(), 1100);
-                var newHeight = Math.round(newWidth * 680 / 1100);
-                if (newWidth !== width) {
-                    location.replace(location);
-                }
-            });
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
 
-            var textAnimate = eval(Jscex.compile("async", function () {
-                var together = new Date();
-                together.setFullYear(2026, 3, 7);  // 2023年6月20日（示例日期）
-                together.setHours(13);
-                together.setMinutes(14);
-                together.setSeconds(0);
-                together.setMilliseconds(0);
+        function timeElapse(start) {
+            var now = new Date();
+            var diff = now - start;
+            var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('clock').textContent = days + '天' + hours + '时' + minutes + '分' + seconds + '秒';
+        }
 
-                $("#code").show().typewriter();
-                $("#clock-box").fadeIn(500);
-                while (true) {
-                    timeElapse(together);
-                    $await(Jscex.Async.sleep(1000));
-                }
-            }));
+        function start() {
+            if (isStarted) return;
+            isStarted = true;
+            
+            document.getElementById('start-hint').style.display = 'none';
+            
+            var audio = document.getElementById('audio') || document.createElement('audio');
+            audio.id = 'audio';
+            audio.src = 'love.mp3';
+            audio.loop = true;
+            audio.play().catch(function() {});
+            
+            startTime = Date.now();
+            animate();
+            
+            setTimeout(function() {
+                document.getElementById('content').style.display = 'block';
+                var together = new Date(2026, 2, 7, 13, 14, 0);
+                timeElapse(together);
+                setInterval(function() { timeElapse(together); }, 1000);
+            }, 2500);
+        }
 
-            var runAsync = eval(Jscex.compile("async", function () {
-                $await(seedAnimate());
-                $await(growAnimate());
-                $await(flowAnimate());
-                $await(moveAnimate());
-
-                textAnimate().start();
-
-                $await(jumpAnimate());
-            }));
-
-            runAsync().start();
-            })();
-        });
+        init();
+        document.addEventListener('click', start);
+        document.addEventListener('touchstart', function(e) { e.preventDefault(); start(); }, { passive: false });
     </script>
-
-
 </body>
-
 </html>
